@@ -7,6 +7,9 @@ target 'AutoWeather' do
 
   # Pods for AutoWeather
 
+  pod 'AFNetworking', '~> 3.1.0'
+  pod 'OneSignal'	  '~> 2.1.16'		
+
   target 'AutoWeatherTests' do
     inherit! :search_paths
     # Pods for testing

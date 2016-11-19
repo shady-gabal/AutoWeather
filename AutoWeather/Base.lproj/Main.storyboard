@@ -42,20 +42,26 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zpa-vz-dZu" userLabel="Notify Time View">
-                                <rect key="frame" x="0.0" y="112" width="375" height="183.5"/>
+                                <rect key="frame" x="0.0" y="112" width="375" height="184"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" text="Notify me everyday at:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aoc-fN-hlP">
-                                        <rect key="frame" x="88" y="10" width="199.5" height="25"/>
+                                        <rect key="frame" x="88" y="10" width="200" height="25"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="18"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <datePicker contentMode="scaleToFill" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="30" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mju-0s-IdY">
-                                        <rect key="frame" x="0.0" y="43" width="375" height="130.5"/>
+                                        <rect key="frame" x="0.0" y="43" width="375" height="131"/>
                                         <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <date key="date" timeIntervalSinceReferenceDate="501165000.89123797">
                                             <!--2016-11-18 12:30:00 +0000-->
                                         </date>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                                <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="highlightsToday" value="NO"/>
+                                        </userDefinedRuntimeAttributes>
                                     </datePicker>
                                 </subviews>
                                 <color key="backgroundColor" red="0.084056392310000005" green="0.7701826692" blue="0.9546486139" alpha="1" colorSpace="calibratedRGB"/>
@@ -69,10 +75,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G23-4J-7nX" userLabel="If Itll Start View">
-                                <rect key="frame" x="0.0" y="284" width="375" height="166.5"/>
+                                <rect key="frame" x="0.0" y="284" width="375" height="167"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notify me if it'll unexpectedly start:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z3Z-wb-9q1">
-                                        <rect key="frame" x="33" y="25" width="309.5" height="25"/>
+                                        <rect key="frame" x="33" y="25" width="310" height="25"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="18"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -102,16 +108,16 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uaJ-Nd-15e" userLabel="Name View">
-                                <rect key="frame" x="-0.5" y="450.5" width="375" height="116.5"/>
+                                <rect key="frame" x="-0.5" y="451" width="375" height="116"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tdb-Yt-hVW">
-                                        <rect key="frame" x="0.5" y="25" width="375" height="91.5"/>
+                                        <rect key="frame" x="0.5" y="25" width="375" height="91"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="30"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your First Name:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDf-hS-mxr">
-                                        <rect key="frame" x="116" y="0.0" width="144.5" height="25"/>
+                                        <rect key="frame" x="115.5" y="0.0" width="145" height="25"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="18"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -160,6 +166,13 @@
                             <constraint firstItem="Zpa-vz-dZu" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="zaK-7V-dFs"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="firstNameField" destination="tdb-Yt-hVW" id="3ji-V0-WUA"/>
+                        <outlet property="locationCityLabel" destination="daa-Nv-dn6" id="Rv2-Ap-XxV"/>
+                        <outlet property="notifyDatePicker" destination="Mju-0s-IdY" id="zUD-f3-mCn"/>
+                        <outlet property="rainSnowSwitch" destination="nXb-HX-xPv" id="M2u-Zt-966"/>
+                        <outlet property="saveButton" destination="JWU-Yh-UWX" id="H8K-zg-AGe"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

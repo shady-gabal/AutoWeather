@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import CoreLocation
+import OneSignal
 
 class HomeViewController: UIViewController, UITextFieldDelegate {
 
@@ -111,6 +112,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         SharedLocationManager.sharedInstance
+
         play()
     }
     
@@ -124,9 +126,12 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
         if !SharedLocationManager.requestedAccess(){
 
             let okAction = UIAlertAction(title: "Ok", style: .default, handler: {(action) in
-                SharedLocationManager.sharedInstance.requestAccess()
+                SharedLocationManager.sharedInstance.requestAccess(callback: {() in
+                    OneSignal.registerForPushNotifications()
+                })
             })
-            Globals.showAlert(withTitle: "Location Access", message: "Hey! We're about to ask if we can use your location. Without your location, we won't be able to see the weather near you.", actions: okAction, onViewController: self)
+            
+            Globals.showAlert(withTitle: "Need Permissions", message: "Hey! Just so you know, we're about to ask if we can use your location and to send you notifications. The app needs both in order to work!", actions: okAction, onViewController: self)
         
         }
     }
@@ -187,6 +192,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
         if SharedLocationManager.sharedInstance.currentUserLocation != nil {
             let geocoder = CLGeocoder()
             geocoder.reverseGeocodeLocation(SharedLocationManager.sharedInstance.currentUserLocation!, completionHandler: {(placemarks, error) -> Void in
+                
                 if (error != nil) {
                     print(error ?? "no error")
                     callback(nil, error)
@@ -218,36 +224,50 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
             params["notification_time"] = alertTime()
             params["seconds_from_utc"] = secondsFromGMT
             params["timezone"] = localTimeZoneAbbreviation
-            
-            getZipcode(callback: {(zipcode, error) -> Void in
-                
-                if zipcode != nil {
-                    params["zipcode"] = zipcode
-                }
+            params["os"] = "ios"
+            params["uuid"] = Globals.uuid()
 
-                var url = "/users/new"
+            OneSignal.idsAvailable({ (userId, pushToken) in
                 
-                if Globals.secretKey() != nil {
-                    url = "/users/update"
+                if userId != nil {
+                    params["onesignal_id"] = userId
+                }
+                if pushToken != nil {
+                    params["push_token"] = pushToken
                 }
                 
-                NetworkManager.sharedInstance.networkRequest(urlString: "\(Globals.BASE_URL)\(url)", method: .POST, parameters: params, successCallback: {(responseObject) -> Void in
+                self.getZipcode(callback: {(zipcode, error) -> Void in
                     
-                    self.requesting = false
-                    print(responseObject ?? "")
-                    
-                    if let json = responseObject as? Dictionary<String, Any> {
-                        if let secretKey = json["secret_key"] as? String {
-                            Globals.saveSecretKey(newSecretKey: secretKey)
-                        }
+                    if zipcode != nil {
+                        params["zipcode"] = zipcode
                     }
                     
+                    var url = "/users/update"
                     
-                }, errorCallback: {(code) -> Void in
-                    self.requesting = false
+                    if Globals.secretKey() == nil {
+                        url = "/users/new"
+                    }
+                    
+                    NetworkManager.sharedInstance.networkRequest(urlString: "\(Globals.BASE_URL)\(url)", method: .POST, parameters: params, successCallback: {(responseObject) -> Void in
+                        
+                        self.requesting = false
+                        print(responseObject ?? "")
+                        
+                        if let json = responseObject as? Dictionary<String, Any> {
+                            if let secretKey = json["secret_key"] as? String {
+                                Globals.saveSecretKey(newSecretKey: secretKey)
+                            }
+                        }
+                        
+                        
+                    }, errorCallback: {(code) -> Void in
+                        self.requesting = false
+                    })
+                    
                 })
-
+                
             })
+
         }
     }
     

@@ -20,8 +20,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // Initialize external libs: OneSignal, PayPal, Facebook
-        OneSignal.initWithLaunchOptions(launchOptions, appId: AppDelegate.ONESIGNAL_APP_ID) { (result) in
-        }
+        
+        var onesignalOptions:[String : Any] = [:]
+        onesignalOptions[kOSSettingsKeyAutoPrompt] = false
+        
+        OneSignal.initWithLaunchOptions(launchOptions, appId: AppDelegate.ONESIGNAL_APP_ID, handleNotificationReceived: { (result) in
+            
+        }, handleNotificationAction: {(result) in
+            
+            }, settings: onesignalOptions)
+        
         
         return true
     }

@@ -15,7 +15,7 @@ class SharedLocationManager: NSObject, CLLocationManagerDelegate {
     
     var locationManager:CLLocationManager = CLLocationManager()
     var currentUserLocation:CLLocation?
-    
+
     override init(){
         super.init()
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters

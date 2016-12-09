@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 struct Globals{
+    static let BASE_URL = "http://87539da6.ngrok.io"
+    
     static func showAlert(withTitle:String!, message:String!, actions:UIAlertAction?..., onViewController:UIViewController!){
         
         let alert:UIAlertController = UIAlertController(title: withTitle, message: message, preferredStyle: .alert)
@@ -25,6 +27,18 @@ struct Globals{
         }
         
         onViewController.present(alert, animated: true, completion: nil)
+    }
+
+    static func secretKey() -> String? {
+       return UserDefaults.standard.string(forKey: "secret_key")
+    }
+    
+    static func saveSecretKey(newSecretKey:String) {
+        UserDefaults.standard.set(newSecretKey, forKey: "secret_key")
+    }
+    
+    static func uuid() -> String {
+      return (UIDevice.current.identifierForVendor?.uuidString)!
     }
 
 }

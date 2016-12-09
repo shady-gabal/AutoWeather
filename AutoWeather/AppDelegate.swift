@@ -7,15 +7,22 @@
 //
 
 import UIKit
+import OneSignal
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    static let ONESIGNAL_APP_ID = "a32e8c25-b419-4dd4-89d7-a9c1dc911fb3"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // Initialize external libs: OneSignal, PayPal, Facebook
+        OneSignal.initWithLaunchOptions(launchOptions, appId: AppDelegate.ONESIGNAL_APP_ID) { (result) in
+        }
+        
         return true
     }
 

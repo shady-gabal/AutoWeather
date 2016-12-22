@@ -17,20 +17,23 @@ class SharedLocationManager: NSObject, CLLocationManagerDelegate {
     var currentUserLocation:CLLocation?
     var requestCallback:(() -> Void)?
     
+    
+    static let ReceivedFirstLocation = Notification.Name("ReceivedFirstLocation")
+    
     override init(){
         super.init()
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         locationManager.delegate = self
-        if SharedLocationManager.haveAccess(){
+        if haveAccess(){
             locationManager.startUpdatingLocation()
         }
     }
     
-    static func haveAccess() -> Bool{
+    func haveAccess() -> Bool{
         return CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedAlways
     }
     
-    static func requestedAccess() -> Bool{
+    func requestedAccess() -> Bool{
         return CLLocationManager.authorizationStatus() != CLAuthorizationStatus.notDetermined
     }
     
@@ -40,7 +43,7 @@ class SharedLocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if SharedLocationManager.haveAccess(){
+        if haveAccess(){
             locationManager.startUpdatingLocation()
         }
         
@@ -51,7 +54,11 @@ class SharedLocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let old = self.currentUserLocation
         self.currentUserLocation = locations.last
+        if old == nil {
+            NotificationCenter.default.post(name: SharedLocationManager.ReceivedFirstLocation, object: nil)
+        }
     }
     
 }

@@ -9,8 +9,10 @@
 /* Begin PBXBuildFile section */
 		0BAFEE46FD2F0E132B4015CE /* Pods_AutoWeatherUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F5F450E45D82CB26BB2331B /* Pods_AutoWeatherUITests.framework */; };
 		958E8FBE0F88E4198DED6B16 /* Pods_AutoWeather.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F4FFC345BDC8D921C587631 /* Pods_AutoWeather.framework */; };
-		974D47931DF361E3009BE8EF /* sunrise.mov in Resources */ = {isa = PBXBuildFile; fileRef = 974D47921DF361E3009BE8EF /* sunrise.mov */; };
-		974D47951DF365E4009BE8EF /* clouds_loop.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 974D47941DF365DB009BE8EF /* clouds_loop.mp4 */; };
+		97686ACD1E078E11004DBD2B /* AvenirNext-Demi-Semi-Spaced-Caps-T.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97686ACC1E078DFE004DBD2B /* AvenirNext-Demi-Semi-Spaced-Caps-T.ttf */; };
+		97915D891E0C3747000EF392 /* clouds.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 97915D881E0C36FE000EF392 /* clouds.mp4 */; };
+		97915D8B1E0C4BB1000EF392 /* clouds_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 97915D8A1E0C4BB0000EF392 /* clouds_bg.png */; };
+		97915D8D1E0C55EA000EF392 /* autoweather.png in Resources */ = {isa = PBXBuildFile; fileRef = 97915D8C1E0C55EA000EF392 /* autoweather.png */; };
 		9794E5F81DDFF0820079EEA2 /* SharedLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9794E5F71DDFF0820079EEA2 /* SharedLocationManager.swift */; };
 		9794E5FA1DDFF29B0079EEA2 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9794E5F91DDFF29B0079EEA2 /* Globals.swift */; };
 		9794E5FC1DDFF4240079EEA2 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9794E5FB1DDFF4240079EEA2 /* NetworkManager.swift */; };
@@ -21,7 +23,6 @@
 		97B4B40E1DDFD7590000885F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97B4B40C1DDFD7590000885F /* LaunchScreen.storyboard */; };
 		97B4B4191DDFD7590000885F /* AutoWeatherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B4B4181DDFD7590000885F /* AutoWeatherTests.swift */; };
 		97B4B4241DDFD75A0000885F /* AutoWeatherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B4B4231DDFD75A0000885F /* AutoWeatherUITests.swift */; };
-		97E5D0BA1DF3389400E19ADE /* clouds_1080.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 97E5D0B91DF3388E00E19ADE /* clouds_1080.mp4 */; };
 		D57B531753FD8C8BE2DBB707 /* Pods_AutoWeatherTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DEED4118B9E7371005B2C65 /* Pods_AutoWeatherTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -48,8 +49,10 @@
 		7343515FAC645109E1D89DA0 /* Pods-AutoWeatherUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutoWeatherUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-AutoWeatherUITests/Pods-AutoWeatherUITests.release.xcconfig"; sourceTree = "<group>"; };
 		7DEED4118B9E7371005B2C65 /* Pods_AutoWeatherTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AutoWeatherTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BDB0EC8BC3672116741D8AE /* Pods-AutoWeatherTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutoWeatherTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AutoWeatherTests/Pods-AutoWeatherTests.debug.xcconfig"; sourceTree = "<group>"; };
-		974D47921DF361E3009BE8EF /* sunrise.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = sunrise.mov; path = ../../../../Downloads/sunrise.mov; sourceTree = "<group>"; };
-		974D47941DF365DB009BE8EF /* clouds_loop.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = clouds_loop.mp4; path = ../../../../Downloads/clouds_loop.mp4; sourceTree = "<group>"; };
+		97686ACC1E078DFE004DBD2B /* AvenirNext-Demi-Semi-Spaced-Caps-T.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AvenirNext-Demi-Semi-Spaced-Caps-T.ttf"; path = "../../../../Downloads/AvenirNext-Demi-Semi-Spaced-Caps-T.ttf"; sourceTree = "<group>"; };
+		97915D881E0C36FE000EF392 /* clouds.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = clouds.mp4; path = Assets/clouds.mp4; sourceTree = SOURCE_ROOT; };
+		97915D8A1E0C4BB0000EF392 /* clouds_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = clouds_bg.png; path = Assets/clouds_bg.png; sourceTree = SOURCE_ROOT; };
+		97915D8C1E0C55EA000EF392 /* autoweather.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = autoweather.png; path = Assets/autoweather.png; sourceTree = SOURCE_ROOT; };
 		9794E5F71DDFF0820079EEA2 /* SharedLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedLocationManager.swift; sourceTree = "<group>"; };
 		9794E5F91DDFF29B0079EEA2 /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		9794E5FB1DDFF4240079EEA2 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -68,7 +71,6 @@
 		97B4B41F1DDFD75A0000885F /* AutoWeatherUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AutoWeatherUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		97B4B4231DDFD75A0000885F /* AutoWeatherUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoWeatherUITests.swift; sourceTree = "<group>"; };
 		97B4B4251DDFD75A0000885F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		97E5D0B91DF3388E00E19ADE /* clouds_1080.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = clouds_1080.mp4; path = ../../../../Downloads/clouds_1080.mp4; sourceTree = "<group>"; };
 		9F4FFC345BDC8D921C587631 /* Pods_AutoWeather.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AutoWeather.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6BEFFF814EE95784A2C0EE0 /* Pods-AutoWeatherUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutoWeatherUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AutoWeatherUITests/Pods-AutoWeatherUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		B8A3B88496F6BDF370EC767A /* Pods-AutoWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutoWeather.release.xcconfig"; path = "Pods/Target Support Files/Pods-AutoWeather/Pods-AutoWeather.release.xcconfig"; sourceTree = "<group>"; };
@@ -158,10 +160,11 @@
 				97B4B4051DDFD7590000885F /* HomeViewController.swift */,
 				9794E5F71DDFF0820079EEA2 /* SharedLocationManager.swift */,
 				9794E5FB1DDFF4240079EEA2 /* NetworkManager.swift */,
+				97915D881E0C36FE000EF392 /* clouds.mp4 */,
+				97915D8A1E0C4BB0000EF392 /* clouds_bg.png */,
+				97915D8C1E0C55EA000EF392 /* autoweather.png */,
 				97B4B4071DDFD7590000885F /* Main.storyboard */,
-				974D47941DF365DB009BE8EF /* clouds_loop.mp4 */,
-				97E5D0B91DF3388E00E19ADE /* clouds_1080.mp4 */,
-				974D47921DF361E3009BE8EF /* sunrise.mov */,
+				97686ACC1E078DFE004DBD2B /* AvenirNext-Demi-Semi-Spaced-Caps-T.ttf */,
 				97B4B40A1DDFD7590000885F /* Assets.xcassets */,
 				97B4B40C1DDFD7590000885F /* LaunchScreen.storyboard */,
 				97B4B40F1DDFD7590000885F /* Info.plist */,
@@ -313,11 +316,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				974D47951DF365E4009BE8EF /* clouds_loop.mp4 in Resources */,
-				97E5D0BA1DF3389400E19ADE /* clouds_1080.mp4 in Resources */,
+				97915D891E0C3747000EF392 /* clouds.mp4 in Resources */,
+				97686ACD1E078E11004DBD2B /* AvenirNext-Demi-Semi-Spaced-Caps-T.ttf in Resources */,
 				97B4B40E1DDFD7590000885F /* LaunchScreen.storyboard in Resources */,
 				97B4B40B1DDFD7590000885F /* Assets.xcassets in Resources */,
-				974D47931DF361E3009BE8EF /* sunrise.mov in Resources */,
+				97915D8D1E0C55EA000EF392 /* autoweather.png in Resources */,
+				97915D8B1E0C4BB1000EF392 /* clouds_bg.png in Resources */,
 				97B4B4091DDFD7590000885F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

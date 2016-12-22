@@ -20,14 +20,41 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var movieView: UIView!
     
+    @IBOutlet weak var backgroundImageView: UIImageView!
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
     private var avPlayer:AVPlayer?
     
     private var requesting:Bool = false
+    private var locality:String?
+    private var zipcode:String?
+    private var country:String?
+    
+    private var _busy:Bool = false
+    private var busy:Bool {
+        set{
+            if newValue {
+                self.saveButton.isHidden = true
+                activityIndicator.startAnimating()
+                activityIndicator.isHidden = false
+            }
+            else{
+                self.saveButton.isHidden = false
+                activityIndicator.isHidden = true
+                activityIndicator.stopAnimating()
+            }
+            _busy = newValue
+        }
+        get{
+            return _busy
+        }
+    }
     
     var secondsFromGMT: Int { return NSTimeZone.local.secondsFromGMT() }
-    var localTimeZoneAbbreviation: String { return NSTimeZone.local.abbreviation(for: Date()) ?? ""}
+    var localTimeZoneAbbreviation: String { return (NSTimeZone.local as! NSTimeZone).name}
 
-    static let VideoName = "clouds_loop.mp4"
+    static let VideoName = "clouds.mp4"
     
     private enum DatePickerProperties: String {
         case TextColor = "textColor"
@@ -36,15 +63,41 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupVideoPlayer()
-        
+        activityIndicator.isHidden = true
+    
         self.notifyDatePicker.setValue(UIColor.white, forKey: "textColor")
         self.notifyDatePicker.setValue(false, forKey: DatePickerProperties.HighlightsToday.rawValue)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(receivedFirstLocation), name: SharedLocationManager.ReceivedFirstLocation, object: nil)
         
+//        self.notifyDatePicker.minuteInterval = 60
+    }
+    
+    @objc func receivedFirstLocation(){
+        checkLocality()
+    }
+    
+    func checkLocality(){
+        if SharedLocationManager.sharedInstance.currentUserLocation != nil {
+            let geocoder = CLGeocoder()
+            geocoder.reverseGeocodeLocation(SharedLocationManager.sharedInstance.currentUserLocation!, completionHandler: {(placemarks, error) -> Void in
+                
+                if (error != nil) {
+                    print(error ?? "no error")
+                }
+                else {
+                    if let placemark = placemarks?.first {
+                        self.locality = placemark.locality
+                        self.locationCityLabel.text = self.locality
+                        self.country = placemark.country
+                        self.zipcode = placemark.postalCode
+                    }
+                }
+            })
+        }
     }
 
     //MARK: Video Player
@@ -71,10 +124,10 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
                 
                 self.avPlayer?.seek(to: kCMTimeZero)
                 self.avPlayer?.volume = 0.0
-                self.avPlayer?.actionAtItemEnd = AVPlayerActionAtItemEnd.none
+//                self.avPlayer?.actionAtItemEnd = AVPlayerActionAtItemEnd.none
                 
-                NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd), name:Notification.Name.AVPlayerItemDidPlayToEndTime, object: self.avPlayer?.currentItem)
-                NotificationCenter.default.addObserver(self, selector:#selector(playerStartPlaying), name:Notification.Name.UIApplicationDidBecomeActive, object:nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd), name:Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+                
             }
             
             
@@ -86,20 +139,16 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     
     func play(){
         self.avPlayer?.play()
-        self.avPlayer?.rate = 0.9
+        self.avPlayer?.rate = 0.85
     }
     
     @objc func playerStartPlaying(notification:Notification) {
         play()
     }
     
-    @objc func playerItemDidReachEnd(notification:Notification) {
-        if let p:AVPlayerItem = notification.object as? AVPlayerItem{
-            p.seek(to:kCMTimeZero)
-        }
-        else{
-            self.avPlayer?.currentItem?.seek(to:kCMTimeZero)
-        }
+    func playerItemDidReachEnd() {
+        self.avPlayer?.currentItem?.seek(to:kCMTimeZero)
+        play()
     }
     
     //MARK: Base Methods
@@ -111,8 +160,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        SharedLocationManager.sharedInstance
-
+        UIApplication.shared.setStatusBarStyle(.lightContent, animated: true)
         play()
     }
     
@@ -123,7 +171,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if !SharedLocationManager.requestedAccess(){
+        if !SharedLocationManager.sharedInstance.requestedAccess(){
 
             let okAction = UIAlertAction(title: "Ok", style: .default, handler: {(action) in
                 SharedLocationManager.sharedInstance.requestAccess(callback: {() in
@@ -180,44 +228,24 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     
     func alertTime() -> String{
         let formatter = DateFormatter()
-        formatter.dateFormat = "hh:mm aa"
+        formatter.dateFormat = "h:mma"
         
         let date = self.notifyDatePicker.date
         let str = formatter.string(from: date)
         
         return str
     }
-    
-    func getZipcode(callback:@escaping (String?, Error?) -> Void) {
-        if SharedLocationManager.sharedInstance.currentUserLocation != nil {
-            let geocoder = CLGeocoder()
-            geocoder.reverseGeocodeLocation(SharedLocationManager.sharedInstance.currentUserLocation!, completionHandler: {(placemarks, error) -> Void in
-                
-                if (error != nil) {
-                    print(error ?? "no error")
-                    callback(nil, error)
-                }
-                else{
-                    let placemark = placemarks?.first
-                    
-                    if let postalCode = placemark?.postalCode {
-                        callback(postalCode, error)
-                    }
-                    else{
-                        callback(nil, NSError())
-                    }
-                }
 
-            });
-        }
-        else{
-            callback(nil, NSError())
-        }
-    }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
-        if !self.requesting {
-            self.requesting = true
+        if !SharedLocationManager.sharedInstance.haveAccess() {
+            Globals.showAlert(withTitle: "Need location permission", message: "Looks like you have disabled location permission. Before we can find the weather near you, you'll need to go to Settings and enable it.", actions: nil, onViewController: self)
+        }
+        else if !UIApplication.shared.isRegisteredForRemoteNotifications {
+            Globals.showAlert(withTitle: "Need notifications permission", message: "Looks like you have disabled push notifications permission. Before we can find the weather near you, you'll need to go to Settings and enable it.", actions: nil, onViewController: self)
+        }
+        else if !self.busy {
+            self.busy = true
             
             var params:Dictionary<String, Any> = [:]
             
@@ -226,6 +254,12 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
             params["timezone"] = localTimeZoneAbbreviation
             params["os"] = "ios"
             params["uuid"] = Globals.uuid()
+            if zipcode != nil {
+                params["zipcode"] = zipcode
+            }
+            if (country != nil){
+                params["country"] = country
+            }
 
             OneSignal.idsAvailable({ (userId, pushToken) in
                 
@@ -236,35 +270,29 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
                     params["push_token"] = pushToken
                 }
                 
-                self.getZipcode(callback: {(zipcode, error) -> Void in
+                var url = "/users/update"
+                
+                if Globals.secretKey() == nil {
+                    url = "/users/new"
+                }
+                
+                NetworkManager.sharedInstance.networkRequest(urlString: "\(Globals.BASE_URL)\(url)", method: .POST, parameters: params, successCallback: {(responseObject) -> Void in
                     
-                    if zipcode != nil {
-                        params["zipcode"] = zipcode
-                    }
+                    self.busy = false
                     
-                    var url = "/users/update"
-                    
-                    if Globals.secretKey() == nil {
-                        url = "/users/new"
-                    }
-                    
-                    NetworkManager.sharedInstance.networkRequest(urlString: "\(Globals.BASE_URL)\(url)", method: .POST, parameters: params, successCallback: {(responseObject) -> Void in
-                        
-                        self.requesting = false
-                        print(responseObject ?? "")
-                        
-                        if let json = responseObject as? Dictionary<String, Any> {
-                            if let secretKey = json["secret_key"] as? String {
-                                Globals.saveSecretKey(newSecretKey: secretKey)
-                            }
+                    if let json = responseObject as? Dictionary<String, Any> {
+                        if let secretKey = json["secret_key"] as? String {
+                            Globals.saveSecretKey(newSecretKey: secretKey)
                         }
-                        
-                        
-                    }, errorCallback: {(code) -> Void in
-                        self.requesting = false
-                    })
+                    }
                     
+                    
+                }, errorCallback: {(code) -> Void in
+                    self.busy = false
+                    
+                    Globals.showAlert(withTitle: "Error", message: "There was an error reaching the server. Try again in a sec.", actions: nil, onViewController: self)
                 })
+                    
                 
             })
 

@@ -245,11 +245,21 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
             Globals.showAlert(withTitle: "Need notifications permission", message: "Looks like you have disabled push notifications permission. Before we can find the weather near you, you'll need to go to Settings and enable it.", actions: nil, onViewController: self)
         }
         else if !self.busy {
-            self.busy = true
-            
             var params:Dictionary<String, Any> = [:]
             
-            params["notification_time"] = alertTime()
+            let alertTime = self.alertTime()
+            let comps = alertTime.components(separatedBy: ":")
+            let hour = Int(comps[0])
+            let minsStr = comps[1].substring(to: alertTime.index(comps[1].startIndex, offsetBy: 2))
+            let mins = Int(minsStr)
+            let ampm = alertTime.substring(from: alertTime.index(alertTime.endIndex, offsetBy: -2))
+            
+            if (hour != nil && mins != nil && (hour! < 4 || hour! == 12) && (hour != 3 || mins == 0) && ampm == "AM"){
+                Globals.showAlert(withTitle: "Error", message: "We currently aren't able to notify you before 3:30AM. Please select a time at or after 3:30AM", actions: nil, onViewController: self)
+                return
+            }
+            
+            params["notification_time"] = alertTime
             params["seconds_from_utc"] = secondsFromGMT
             params["timezone"] = localTimeZoneAbbreviation
             params["os"] = "ios"
@@ -275,6 +285,8 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
                 if Globals.secretKey() == nil {
                     url = "/users/new"
                 }
+                
+                self.busy = true
                 
                 NetworkManager.sharedInstance.networkRequest(urlString: "\(Globals.BASE_URL)\(url)", method: .POST, parameters: params, successCallback: {(responseObject) -> Void in
                     

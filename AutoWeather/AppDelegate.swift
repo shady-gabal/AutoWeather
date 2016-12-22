@@ -19,8 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        // Initialize external libs: OneSignal, PayPal, Facebook
-        
         var onesignalOptions:[String : Any] = [:]
         onesignalOptions[kOSSettingsKeyAutoPrompt] = false
         
@@ -30,6 +28,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             }, settings: onesignalOptions)
         
+//        let container = UIView(frame: self.window!.frame)
+
+//        let visual = UIVisualEffectView(effect:  UIBlurEffect(style: .dark))
+//        let visual = UIView(frame: self.window!.frame)
+//        visual.backgroundColor = UIColor.black
+//        visual.alpha = 0.35
+//        visual.frame = self.window!.frame
+
+        let p = UIImageView(image: UIImage(named: "clouds_bg"))
+        p.frame = self.window!.frame
+        p.contentMode = .scaleAspectFill
+
+//        container.addSubview(p)
+//        container.addSubview(visual)
+        
+        self.window?.addSubview(p)
         
         return true
     }

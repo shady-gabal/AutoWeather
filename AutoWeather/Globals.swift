@@ -38,6 +38,16 @@ struct Globals{
         UserDefaults.standard.set(newSecretKey, forKey: "secret_key")
     }
     
+    static func saveLocality(locality:String?) {
+        if locality != nil {
+            UserDefaults.standard.set(locality, forKey: "locality")
+        }
+    }
+    
+    static func savedLocality() -> String? {
+        return UserDefaults.standard.string(forKey: "locality")
+    }
+    
     static func uuid() -> String {
       return (UIDevice.current.identifierForVendor?.uuidString)!
     }

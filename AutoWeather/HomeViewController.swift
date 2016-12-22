@@ -20,6 +20,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var movieView: UIView!
     
+    @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -72,13 +73,16 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(receivedFirstLocation), name: SharedLocationManager.ReceivedFirstLocation, object: nil)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(play), name:         NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pause), name:         NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        self.locationCityLabel.text = Globals.savedLocality() ?? ""
 //        self.notifyDatePicker.minuteInterval = 60
     }
     
     @objc func receivedFirstLocation(){
         checkLocality()
     }
+    
     
     func checkLocality(){
         if SharedLocationManager.sharedInstance.currentUserLocation != nil {
@@ -90,7 +94,12 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
                 }
                 else {
                     if let placemark = placemarks?.first {
-                        self.locality = placemark.locality
+                        var locality = placemark.subLocality != nil ? placemark.subLocality : placemark.subAdministrativeArea
+                        locality = locality ?? placemark.locality
+                        
+                        self.locality = locality
+                        Globals.saveLocality(locality: locality)
+                        
                         self.locationCityLabel.text = self.locality
                         self.country = placemark.country
                         self.zipcode = placemark.postalCode
@@ -124,7 +133,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
                 
                 self.avPlayer?.seek(to: kCMTimeZero)
                 self.avPlayer?.volume = 0.0
-//                self.avPlayer?.actionAtItemEnd = AVPlayerActionAtItemEnd.none
+                self.avPlayer?.actionAtItemEnd = AVPlayerActionAtItemEnd.none
                 
                 NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd), name:Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
                 
@@ -142,26 +151,29 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
         self.avPlayer?.rate = 0.85
     }
     
+    func pause(){
+        self.avPlayer?.pause()
+    }
+    
     @objc func playerStartPlaying(notification:Notification) {
         play()
     }
     
     func playerItemDidReachEnd() {
         self.avPlayer?.currentItem?.seek(to:kCMTimeZero)
-        play()
+//        play()
     }
     
     //MARK: Base Methods
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.avPlayer?.pause()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         UIApplication.shared.setStatusBarStyle(.lightContent, animated: true)
-        play()
+//        play()
     }
     
     override func didReceiveMemoryWarning() {
@@ -170,17 +182,21 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        fadeIn()
+ 
+    }
+    
+    @objc func askPermissions(){
         if !SharedLocationManager.sharedInstance.requestedAccess(){
-
+            
             let okAction = UIAlertAction(title: "Ok", style: .default, handler: {(action) in
                 SharedLocationManager.sharedInstance.requestAccess(callback: {() in
                     OneSignal.registerForPushNotifications()
                 })
             })
             
-            Globals.showAlert(withTitle: "Need Permissions", message: "Hey! Just so you know, we're about to ask if we can use your location and to send you notifications. The app needs both in order to work!", actions: okAction, onViewController: self)
-        
+            Globals.showAlert(withTitle: "Need Permissions", message: "Hey! We're about to ask if we can use your location and send you notifications. The app needs both in order to work.", actions: okAction, onViewController: self)
+            
         }
     }
 
@@ -245,8 +261,6 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
             Globals.showAlert(withTitle: "Need notifications permission", message: "Looks like you have disabled push notifications permission. Before we can find the weather near you, you'll need to go to Settings and enable it.", actions: nil, onViewController: self)
         }
         else if !self.busy {
-            var params:Dictionary<String, Any> = [:]
-            
             let alertTime = self.alertTime()
             let comps = alertTime.components(separatedBy: ":")
             let hour = Int(comps[0])
@@ -254,10 +268,12 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
             let mins = Int(minsStr)
             let ampm = alertTime.substring(from: alertTime.index(alertTime.endIndex, offsetBy: -2))
             
-            if (hour != nil && mins != nil && (hour! < 4 || hour! == 12) && (hour != 3 || mins == 0) && ampm == "AM"){
-                Globals.showAlert(withTitle: "Error", message: "We currently aren't able to notify you before 3:30AM. Please select a time at or after 3:30AM", actions: nil, onViewController: self)
+            if (hour != nil && mins != nil && (hour! < 3 || hour! == 12) && ampm == "AM"){
+                Globals.showAlert(withTitle: "Error", message: "We currently aren't able to notify you before 3:00AM. Please select a time at or after 3:00AM", actions: nil, onViewController: self)
                 return
             }
+            
+            var params:Dictionary<String, Any> = [:]
             
             params["notification_time"] = alertTime
             params["seconds_from_utc"] = secondsFromGMT
@@ -298,6 +314,8 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
                         }
                     }
                     
+                    Globals.showAlert(withTitle: "Saved", message: "Successfully saved your notification time preference.", actions: nil, onViewController: self)
+                    
                     
                 }, errorCallback: {(code) -> Void in
                     self.busy = false
@@ -311,6 +329,16 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    func fadeIn(){
+        UIView.animate(withDuration: 1.5, delay: 1, options: .curveLinear, animations: {
+            self.saveButton.alpha = 1
+            self.notifyDatePicker.alpha = 1
+            self.locationCityLabel.alpha = 1
+            self.infoLabel.alpha = 1
+        }, completion: {(finished) -> Void in
+                Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.askPermissions), userInfo: nil, repeats: false)
+        })
+    }
 
 }
 

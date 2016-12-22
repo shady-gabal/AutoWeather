@@ -30,7 +30,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.019607843140000001" green="0.45098039220000002" blue="0.76470588240000004" alpha="0.0" colorSpace="calibratedRGB"/>
                             </view>
-                            <visualEffectView opaque="NO" alpha="0.65000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Pg-Vv-WoZ">
+                            <visualEffectView opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.65000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Pg-Vv-WoZ">
                                 <rect key="frame" x="-0.5" y="-0.5" width="375" height="667"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="i4Q-PA-gGv">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -41,7 +41,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2nd-ay-RKf" userLabel="Container">
                                 <rect key="frame" x="-0.5" y="-0.5" width="375" height="667"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="New York" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="daa-Nv-dn6">
+                                    <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="daa-Nv-dn6">
                                         <rect key="frame" x="0.0" y="30" width="375" height="107"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="107" id="89u-MR-j4P"/>
@@ -52,7 +52,7 @@
                                         <color key="shadowColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <size key="shadowOffset" width="0.0" height="0.5"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JWU-Yh-UWX">
+                                    <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JWU-Yh-UWX">
                                         <rect key="frame" x="0.0" y="537" width="375" height="110"/>
                                         <color key="backgroundColor" red="0.084056392310000005" green="0.7701826692" blue="0.9546486139" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -68,7 +68,7 @@
                                             <action selector="saveButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ga1-Z0-icG"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" text="What time should we notify you everyday?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aoc-fN-hlP">
+                                    <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" text="When should we notify you every morning?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aoc-fN-hlP">
                                         <rect key="frame" x="87.5" y="147.5" width="200" height="72"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="72" id="1QZ-sS-lrm"/>
@@ -99,7 +99,7 @@
                                     <constraint firstItem="daa-Nv-dn6" firstAttribute="top" secondItem="2nd-ay-RKf" secondAttribute="top" constant="30" id="yEV-zx-m0p"/>
                                 </constraints>
                             </view>
-                            <datePicker contentMode="scaleToFill" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="30" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mju-0s-IdY">
+                            <datePicker alpha="0.0" contentMode="scaleToFill" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="30" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mju-0s-IdY">
                                 <rect key="frame" x="-0.5" y="239" width="375" height="216"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -145,6 +145,7 @@
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="6Ds-d0-LnJ" id="b05-JN-gy3"/>
+                        <outlet property="infoLabel" destination="Aoc-fN-hlP" id="djc-cR-DBj"/>
                         <outlet property="locationCityLabel" destination="daa-Nv-dn6" id="Rv2-Ap-XxV"/>
                         <outlet property="movieView" destination="g8x-4i-FNI" id="gE0-8J-QfL"/>
                         <outlet property="notifyDatePicker" destination="Mju-0s-IdY" id="zUD-f3-mCn"/>

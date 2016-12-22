@@ -54,8 +54,11 @@ class SharedLocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let newLocation = locations.last
+//        let newLocation = CLLocation(latitude: 20.593684, longitude: 78.962880)
+        
         let old = self.currentUserLocation
-        self.currentUserLocation = locations.last
+        self.currentUserLocation = newLocation
         if old == nil {
             NotificationCenter.default.post(name: SharedLocationManager.ReceivedFirstLocation, object: nil)
         }

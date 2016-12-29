@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 struct Globals{
-//    static let BASE_URL = "http://bd90d89c.ngrok.io"
-    static let BASE_URL = "https://autoweather.herokuapp.com"
+    static let BASE_URL = "http://3d4c8cf1.ngrok.io"
+//    static let BASE_URL = "https://autoweather.herokuapp.com"
 
     static func showAlert(withTitle:String!, message:String!, actions:UIAlertAction?..., onViewController:UIViewController!){
         

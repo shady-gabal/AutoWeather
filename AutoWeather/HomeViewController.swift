@@ -32,6 +32,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     private var zipcode:String?
     private var country:String?
     
+    private var saveOnFirstLocation:Bool = false
     private var _busy:Bool = false
     private var busy:Bool {
         set{
@@ -76,7 +77,6 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(play), name:         NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pause), name:         NSNotification.Name.UIApplicationWillResignActive, object: nil)
         self.locationCityLabel.text = Globals.savedLocality() ?? ""
-//        self.notifyDatePicker.minuteInterval = 60
     }
     
     @objc func receivedFirstLocation(){
@@ -103,6 +103,11 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
                         self.locationCityLabel.text = self.locality
                         self.country = placemark.country
                         self.zipcode = placemark.postalCode
+                        
+                        if self.saveOnFirstLocation {
+                            self.saveOnFirstLocation = false
+                            self.saveButtonTapped("")
+                        }
                     }
                 }
             })
@@ -260,6 +265,9 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
         else if !UIApplication.shared.isRegisteredForRemoteNotifications {
             Globals.showAlert(withTitle: "Need notifications permission", message: "Looks like you have disabled push notifications permission. Before we can find the weather near you, you'll need to go to Settings and enable it.", actions: nil, onViewController: self)
         }
+        else if SharedLocationManager.sharedInstance.currentUserLocation == nil {
+            self.saveOnFirstLocation = true
+        }
         else if !self.busy {
             let alertTime = self.alertTime()
             let comps = alertTime.components(separatedBy: ":")
@@ -286,6 +294,8 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
             if (country != nil){
                 params["country"] = country
             }
+            params["lat"] = SharedLocationManager.sharedInstance.currentUserLocation!.coordinate.latitude
+            params["lon"] = SharedLocationManager.sharedInstance.currentUserLocation!.coordinate.longitude
 
             OneSignal.idsAvailable({ (userId, pushToken) in
                 

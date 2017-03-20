@@ -32,7 +32,8 @@ class SharedLocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func haveAccess() -> Bool{
-        return CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse    }
+        return CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse
+    }
     
     func requestedAccess() -> Bool{
         return CLLocationManager.authorizationStatus() != CLAuthorizationStatus.notDetermined

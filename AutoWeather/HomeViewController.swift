@@ -15,8 +15,6 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var locationCityLabel: UILabel!
     @IBOutlet weak var notifyDatePicker: UIDatePicker!
-    @IBOutlet weak var rainSnowSwitch: UISwitch!
-    @IBOutlet weak var firstNameField: UITextField!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var movieView: UIView!
     
@@ -77,6 +75,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updatedLocation), name: SharedLocationManager.UpdatedLocation, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(play), name:         NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pause), name:         NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        
         self.locationCityLabel.text = Globals.savedLocality() ?? ""
     }
     
@@ -204,7 +203,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
                 })
             })
             
-            Globals.showAlert(withTitle: "Need Permissions", message: "Hey! We're about to ask if we can use your location and send you notifications. The app needs both in order to work.", actions: okAction, onViewController: self)
+            Globals.showAlert(withTitle: "Welcome!", message: "Hey! Welcome to AutoWeather. We're about to ask if we can use your location and send you notifications. AutoWeather needs both to work.", actions: okAction, onViewController: self)
             
         }
     }

@@ -12,6 +12,7 @@ import CoreLocation
 class SharedLocationManager: NSObject, CLLocationManagerDelegate {
 
     static let sharedInstance = SharedLocationManager()
+    static let MIN_METERS_FOR_UPDATE = 3000.0
     
     var locationManager:CLLocationManager = CLLocationManager()
     var currentUserLocation:CLLocation?
@@ -19,10 +20,11 @@ class SharedLocationManager: NSObject, CLLocationManagerDelegate {
     
     
     static let ReceivedFirstLocation = Notification.Name("ReceivedFirstLocation")
-    
+    static let UpdatedLocation = Notification.Name("UpdatedLocation")
+
     override init(){
         super.init()
-        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
         locationManager.delegate = self
         if haveAccess(){
             locationManager.startUpdatingLocation()
@@ -30,8 +32,7 @@ class SharedLocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func haveAccess() -> Bool{
-        return CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedAlways
-    }
+        return CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse    }
     
     func requestedAccess() -> Bool{
         return CLLocationManager.authorizationStatus() != CLAuthorizationStatus.notDetermined
@@ -39,7 +40,7 @@ class SharedLocationManager: NSObject, CLLocationManagerDelegate {
     
     func requestAccess(callback:(() -> Void)?){
         self.requestCallback = callback
-        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -57,10 +58,18 @@ class SharedLocationManager: NSObject, CLLocationManagerDelegate {
         let newLocation = locations.last
 //        let newLocation = CLLocation(latitude: 20.593684, longitude: 78.962880)
         
+        if newLocation == nil {
+            return
+        }
+        
         let old = self.currentUserLocation
         self.currentUserLocation = newLocation
+        
         if old == nil {
             NotificationCenter.default.post(name: SharedLocationManager.ReceivedFirstLocation, object: nil)
+        }
+        else if old!.distance(from: newLocation!) >= SharedLocationManager.MIN_METERS_FOR_UPDATE {
+            NotificationCenter.default.post(name: SharedLocationManager.UpdatedLocation, object: nil)
         }
     }
     

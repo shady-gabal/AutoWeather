@@ -74,6 +74,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(receivedFirstLocation), name: SharedLocationManager.ReceivedFirstLocation, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updatedLocation), name: SharedLocationManager.UpdatedLocation, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(play), name:         NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pause), name:         NSNotification.Name.UIApplicationWillResignActive, object: nil)
         self.locationCityLabel.text = Globals.savedLocality() ?? ""
@@ -83,6 +84,9 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
         checkLocality()
     }
     
+    @objc func updatedLocation(){
+        checkLocality()
+    }
     
     func checkLocality(){
         if SharedLocationManager.sharedInstance.currentUserLocation != nil {
@@ -260,10 +264,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func saveButtonTapped(_ sender: Any) {
         if !SharedLocationManager.sharedInstance.haveAccess() {
-            Globals.showAlert(withTitle: "Need location permission", message: "Looks like you have disabled location permission. Before we can find the weather near you, you'll need to go to Settings and enable it.", actions: nil, onViewController: self)
-        }
-        else if !UIApplication.shared.isRegisteredForRemoteNotifications {
-            Globals.showAlert(withTitle: "Need notifications permission", message: "Looks like you have disabled push notifications permission. Before we can find the weather near you, you'll need to go to Settings and enable it.", actions: nil, onViewController: self)
+            Globals.showAlert(withTitle: "Need location permission", message: "Looks like you've disabled location permission. Before we can find the weather near you, you'll need to go to Settings and enable it.", actions: nil, onViewController: self)
         }
         else if SharedLocationManager.sharedInstance.currentUserLocation == nil {
             self.saveOnFirstLocation = true
@@ -299,12 +300,18 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
 
             OneSignal.idsAvailable({ (userId, pushToken) in
                 
+                if !UIApplication.shared.isRegisteredForRemoteNotifications || pushToken == nil {
+                    Globals.showAlert(withTitle: "Need notifications permission", message: "Looks like you've disabled push notifications permission. Before we can notify you of the weather, you'll need to go to Settings and enable it.", actions: nil, onViewController: self)
+                    
+                    return
+                }
+                
                 if userId != nil {
                     params["onesignal_id"] = userId
                 }
-                if pushToken != nil {
-                    params["push_token"] = pushToken
-                }
+                
+                params["push_token"] = pushToken
+                
                 
                 var url = "/users/update"
                 
@@ -324,7 +331,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
                         }
                     }
                     
-                    Globals.showAlert(withTitle: "Saved", message: "Successfully saved your notification time preference.", actions: nil, onViewController: self)
+                    Globals.showAlert(withTitle: "Got it!", message: "We'll send you a notification with the day's weather a couple of minutes before your alarm goes off every morning.", actions: nil, onViewController: self)
                     
                     
                 }, errorCallback: {(code) -> Void in
